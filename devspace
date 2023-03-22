@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+services=($(ls .devspace/*/devspace.yaml | awk -F"/" '{print $2;}'))
+
+for index in "${!services[@]}"; do
+    echo "$index -> ${services[$index]}";
+done
+
+read -p "Enter the index of the service you want to develop? " input_index
+echo ""
+selected_service=${services[$input_index]}
+
+if [[ -z "$selected_service" ]]; then
+    echo "You do not know how to choose indexes. Please retry again." && exit 1;
+fi
+
+echo "You have selected the service -> ${selected_service}"
+export DEVSPACE_BINARY_DIR=$(pwd)
+(cd .devspace/${selected_service} && devspace "$@")

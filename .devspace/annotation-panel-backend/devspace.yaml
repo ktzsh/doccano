@@ -1,0 +1,21 @@
+version: v2beta1
+name: annotation-panel-backend
+
+imports:
+  - git: git@github.com:vmockinc/guidelines.git
+    branch: master
+    subPath: ./devspace/non-ui/capabilities
+
+vars:
+  WORKLOAD_TYPE: api
+  INGRESS_PATH: doccano-backend
+  WORKING_DIR: /backend
+  CODE_ROOT_DIR: ./../../backend
+  WEB_CONTAINER_PORT: 8000
+  IMAGE_BUILD_CONTEXT: ./../../
+  DOCKERFILE_PATH: ./../../docker/Dockerfile.backend
+  API_CPU_REQUEST: 1000m
+  API_CPU_LIMIT: 1800m
+  API_MEMORY_REQUEST: 1Gi
+  API_MEMORY_LIMIT: 2Gi
+  API_NODE_TYPE: mo

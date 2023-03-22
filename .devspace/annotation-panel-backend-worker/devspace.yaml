@@ -1,0 +1,18 @@
+version: v2beta1
+name: annotation-panel-backend-worker
+
+imports:
+  - git: git@github.com:vmockinc/guidelines.git
+    branch: master
+    subPath: ./devspace/non-ui/capabilities
+
+vars:
+  WORKLOAD_TYPE: worker-helper
+  WORKING_DIR: /backend
+  CODE_ROOT_DIR: ./../../backend
+  IMAGE_BUILD_CONTEXT: ./../../
+  DOCKERFILE_PATH: ./../../docker/Dockerfile.celery
+  WORKER_CPU_REQUEST: 1000m
+  WORKER_CPU_LIMIT: 1800m
+  WORKER_MEMORY_REQUEST: 1Gi
+  WORKER_MEMORY_LIMIT: 2Gi
