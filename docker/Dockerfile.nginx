@@ -14,6 +14,8 @@ RUN yarn config set "strict-ssl" false \
 
 FROM nginx:1.21.1-alpine AS runtime
 
+RUN apk add --no-cache bash
+
 RUN addgroup -g 61000 doccano \
   && adduser -G doccano -S doccano -u 61000
 
