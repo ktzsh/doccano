@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Category",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
                 ("prob", models.FloatField(default=0.0)),
                 ("manual", models.BooleanField(default=False)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Example",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
                 ("meta", models.JSONField(default=dict)),
                 ("filename", models.FileField(default=".", upload_to="")),
                 ("text", models.TextField(blank=True, null=True)),
@@ -64,7 +64,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="Span",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
                 ("prob", models.FloatField(default=0.0)),
                 ("manual", models.BooleanField(default=False)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
@@ -87,12 +87,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="TextLabel",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
                 ("prob", models.FloatField(default=0.0)),
                 ("manual", models.BooleanField(default=False)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),
-                ("text", models.TextField()),
+                ("text", models.CharField(max_length=255)),
                 (
                     "example",
                     models.ForeignKey(

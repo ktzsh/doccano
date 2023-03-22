@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(  # id_autogen, annotation_id_1, annotation_id_2, type, author, timestamp
             name="RelationTypes",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
                 ("name", models.TextField(max_length=50)),
                 ("color", models.TextField(max_length=20)),
                 (
@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(  # id_autogen, annotation_id_1, annotation_id_2, type, author, timestamp
             name="AnnotationRelations",
             fields=[
-                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
                 ("annotation_id_1", models.IntegerField()),
                 ("annotation_id_2", models.IntegerField()),
                 ("type", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="api.RelationTypes")),

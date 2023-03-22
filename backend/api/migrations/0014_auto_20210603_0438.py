@@ -37,12 +37,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="relationtypes",
             name="color",
-            field=models.TextField(),
+            field=models.CharField(max_length=255),
         ),
         migrations.AlterField(
             model_name="relationtypes",
             name="name",
-            field=models.TextField(),
+            field=models.CharField(max_length=255),
         ),
         migrations.AlterUniqueTogether(
             name="annotationrelations",

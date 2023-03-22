@@ -104,7 +104,7 @@ class Migration(migrations.Migration):
                                 auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
                             ),
                         ),
-                        ("color", models.TextField()),
+                        ("color", models.CharField(max_length=255)),
                         ("name", models.TextField()),
                         (
                             "project",
