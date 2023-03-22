@@ -13,15 +13,25 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
+RUN echo "mysql-apt-config mysql-apt-config/select-server select mysql-8.0" | debconf-set-selections
+RUN apt-get update && \
+    apt-get install -y wget lsb-release gnupg && \
+    wget http://repo.mysql.com/mysql-apt-config_0.8.22-1_all.deb && \
+    DEBIAN_FRONTEND=noninteractive dpkg -i mysql-apt-config_0.8.22-1_all.deb && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-community-server libmysqlclient-dev
+
 WORKDIR /tmp
 COPY backend/pyproject.toml backend/poetry.lock /tmp/
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN pip install -U --no-cache-dir pip==22.2.2 \
- && curl -sSL https://install.python-poetry.org | python - \
+ && curl -sSL --insecure https://install.python-poetry.org | python - \
  && export PATH="/root/.local/bin:$PATH" \
  && poetry export --without-hashes -o /requirements.txt \
  && echo "psycopg2-binary==2.8.6" >> /requirements.txt \
+ && echo "mysqlclient==1.4.0" >> /requirements.txt \
+ && echo "redis==3.5.0" >> /requirements.txt \
  && pip install --no-cache-dir -r /requirements.txt
 
 FROM python:${PYTHON_VERSION} AS runtime
@@ -42,17 +52,23 @@ RUN groupadd -g 61000 doccano \
 COPY --from=backend-builder /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
 COPY --from=backend-builder /usr/local/bin/celery /usr/local/bin/celery
 COPY --from=backend-builder /usr/local/bin/gunicorn /usr/local/bin/gunicorn
-COPY --chown=doccano:doccano tools/ /opt/bin/
-COPY --chown=doccano:doccano backend/ /backend/
+COPY --from=backend-builder /usr/bin/mysql /usr/bin/mysql
+COPY --from=backend-builder /usr/bin/mysqldump /usr/bin/mysqldump
+COPY --from=backend-builder /usr/lib/mysql /usr/lib/mysql
+COPY --from=backend-builder /usr/lib/x86_64-linux-gnu/libmysqlclient.a  /usr/lib/x86_64-linux-gnu/libmysqlclient.a
+COPY --from=backend-builder /usr/lib/x86_64-linux-gnu/libmysqlclient.so  /usr/lib/x86_64-linux-gnu/libmysqlclient.so
+COPY --from=backend-builder /usr/lib/x86_64-linux-gnu/libmysqlclient.so.21  /usr/lib/x86_64-linux-gnu/libmysqlclient.so.21
+
+COPY --chown=doccano:root tools/ /opt/bin/
+COPY --chown=doccano:root backend/ /backend/
 RUN mkdir -p /backend/staticfiles \
   && mkdir -p /backend/client/dist/static \
   && mkdir -p /backend/media \
   && mkdir -p /backend/filepond-temp-uploads \
-  && chown -R doccano:doccano /backend/
+  && chown -R doccano:root /backend/
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-USER doccano:doccano
-VOLUME /backend/staticfiles
+USER root
 
-ENTRYPOINT [ "/opt/bin/prod-django.sh" ]
+ENTRYPOINT [ "/opt/bin/prod-celery.sh" ]
